@@ -22,7 +22,7 @@ function checkArguments(options) {
 
                 let outFile = fs.createWriteStream(options.output, { flags: 'a' });
 
-                console.log(`Type 'exit' to stop`);
+                process.stdout.write(`Type 'exit' or use Ctrl+C combination to stop input\n`);
 
                 function readLineRecurs() {
                     rl.question('Enter your text: ', (str) => {
@@ -45,7 +45,7 @@ function checkArguments(options) {
                     str += chunk;
                 });
                 inFile.on('end', () => {
-                    console.log(`Encoded text: ${caesarCipher(str, options.shift, options.action)}`);
+                    process.stdout.write(`Encoded text: ${caesarCipher(str, options.shift, options.action)}\n`);
                 });
             } else if (!options.input && !options.output) {
                 const rl = readline.createInterface({
@@ -53,7 +53,7 @@ function checkArguments(options) {
                     output: process.stdout,
                 });
 
-                console.log(`Type 'exit' to stop`);
+                process.stdout.write(`Type 'exit' or use Ctrl+C combination to stop input\n`);
 
                 function readLineRecurs() {
                     rl.question('Enter your text: ', (str) => {
@@ -61,7 +61,7 @@ function checkArguments(options) {
                             return rl.close();
                         }
 
-                        console.log(`Encoded text: ${caesarCipher(str, options.shift, options.action)}`);
+                        process.stdout.write(`Encoded text: ${caesarCipher(str, options.shift, options.action)}\n`);
                         readLineRecurs();
                     });
                 }

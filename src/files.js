@@ -11,10 +11,17 @@ function readAndWrite(options) {
             decodeStrings: false,
             construct(callback) {
                 this.data = '';
-                callback();
+
+                if (fs.existsSync(options.input)) {
+                    callback();
+                } else {
+					process.stderr.write(errorColor('Input file not found'));
+                    process.exit(1);
+                }
             },
             transform(chunk, encoding, callback) {
                 this.data += chunk;
+
                 callback();
             },
             flush(callback) {
