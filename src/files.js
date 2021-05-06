@@ -4,6 +4,25 @@ const fs = require('fs');
 const errorColor = require('./utils');
 const caesarCipher = require('./caesar');
 
+function checkOutputFile(file, callback) {
+    if (fs.existsSync(file)) {
+        if (fs.lstatSync(file).isFile()) {
+            fs.access(file, fs.constants.W_OK, (err) => {
+                if (err) {
+                    process.stderr.write(errorColor("Can't write to output file"));
+                    process.exit(1);
+                }
+                callback();
+            });
+        } else {
+            process.stderr.write(errorColor('Output is not a file'));
+            process.exit(1);
+        }
+    } else {
+        callback();
+    }
+}
+
 function readAndWrite(options) {
     pipeline(
         fs.createReadStream(options.input).setEncoding('utf8'),
@@ -12,12 +31,14 @@ function readAndWrite(options) {
             construct(callback) {
                 this.data = '';
 
-                if (fs.existsSync(options.input)) {
-                    callback();
-                } else {
-					process.stderr.write(errorColor('Input file not found'));
-                    process.exit(1);
-                }
+                checkOutputFile(options.output, () => {
+                    if (fs.existsSync(options.input) && fs.lstatSync(options.input).isFile()) {
+                        callback();
+                    } else {
+                        process.stderr.write(errorColor('Input file not found'));
+                        process.exit(1);
+                    }
+                });
             },
             transform(chunk, encoding, callback) {
                 this.data += chunk;
@@ -42,4 +63,4 @@ function readAndWrite(options) {
     );
 }
 
-module.exports = readAndWrite;
+module.exports = { readAndWrite, checkOutputFile };
