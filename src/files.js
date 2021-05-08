@@ -47,7 +47,7 @@ function readAndWrite(options) {
             },
             flush(callback) {
                 try {
-                    this.push(caesarCipher(this.data, Number(options.shift), options.action));
+                    this.push(caesarCipher(this.data, options.shift, options.action));
                     process.exit(0);
                 } catch (err) {
                     callback(err);

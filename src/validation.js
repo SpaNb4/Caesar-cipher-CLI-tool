@@ -51,6 +51,7 @@ function checkArguments(options) {
                 });
                 inFile.on('end', () => {
                     process.stdout.write(`Encoded text: ${caesarCipher(str, options.shift, options.action)}\n`);
+                    process.exit(1);
                 });
             } else if (!options.input && !options.output) {
                 process.stdout.write(`Type 'exit' or use Ctrl+C combination to stop input\n`);

@@ -1,6 +1,7 @@
 const process = require('process');
 const commander = require('commander');
 const checkArguments = require('./validation');
+const errorColor = require('./utils');
 const program = new commander.Command();
 
 program
@@ -12,6 +13,11 @@ program
 program.parse(process.argv);
 
 const options = program.opts();
+
+if (isNaN(options.shift)) {
+    process.stderr.write(errorColor('Shift must be an integer'));
+    process.exit(1);
+}
 
 checkArguments(options);
 
