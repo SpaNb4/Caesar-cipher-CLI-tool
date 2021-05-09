@@ -36,7 +36,7 @@ function checkArguments(options) {
         } else {
             if (!options.input && options.output) {
                 files.checkOutputFile(options.output, () => {
-                    let outFile = fs.createWriteStream(options.output, { flags: 'a' });
+                    let outFile = fs.createWriteStream(options.output, { flags: 'r+' });
 
                     process.stdout.write(`Type 'exit' or use Ctrl+C combination to stop input\n`);
 

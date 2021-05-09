@@ -19,7 +19,8 @@ function checkOutputFile(file, callback) {
             process.exit(1);
         }
     } else {
-        callback();
+        process.stderr.write(errorColor('No output file'));
+        process.exit(1);
     }
 }
 
@@ -42,19 +43,24 @@ function readAndWrite(options) {
             },
             transform(chunk, encoding, callback) {
                 this.data += chunk;
-
+				
                 callback();
             },
             flush(callback) {
                 try {
-                    this.push(caesarCipher(this.data, options.shift, options.action));
+                    fs.appendFileSync(options.output, caesarCipher(this.data, options.shift, options.action), (err) => {
+                        if (err) {
+                            process.stderr.write(errorColor(err));
+                            process.exit(1);
+                        }
+                    });
                     process.exit(0);
                 } catch (err) {
                     callback(err);
                 }
             },
         }),
-        fs.createWriteStream(options.output, { flags: 'a' }),
+        fs.createWriteStream(options.output, { flags: 'r+' }),
         (err) => {
             if (err) {
                 process.stderr.write(errorColor(err));
