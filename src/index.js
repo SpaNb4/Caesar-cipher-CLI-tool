@@ -14,11 +14,6 @@ program.parse(process.argv);
 
 const options = program.opts();
 
-if (isNaN(options.shift)) {
-    process.stderr.write(errorColor('Shift must be an integer'));
-    process.exit(1);
-}
-
 checkArguments(options);
 
 module.exports = options;

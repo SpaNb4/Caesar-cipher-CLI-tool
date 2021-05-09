@@ -31,6 +31,11 @@ function checkArguments(options) {
         process.stderr.write(errorColor('Action (encode/decode) and the shift are required!'));
         process.exit(1);
     } else {
+        if (isNaN(options.shift)) {
+            process.stderr.write(errorColor('Shift must be an integer'));
+            process.exit(1);
+        }
+
         if (options.input && options.output) {
             files.readAndWrite(options);
         } else {
